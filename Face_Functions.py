@@ -31,7 +31,8 @@ def detect_gender(frame,faces):
     ageNet=cv2.dnn.readNet(ageModel,ageProto)
     ageList=['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
     padding=20
-    for faceBox in faces:
+    genderAGE = []
+    for i, faceBox in enumerate(faces):
         face=frame[max(0,faceBox[1]-padding):
                    min(faceBox[3]+padding,frame.shape[0]-1),max(0,faceBox[0]-padding)
                    :min(faceBox[2]+padding, frame.shape[1]-1)]
@@ -47,6 +48,10 @@ def detect_gender(frame,faces):
             agePreds=ageNet.forward()
             age=ageList[agePreds[0].argmax()]
             print(f'Age: {age[1:-1]} years')
-            return gender,age[1:-1]
+            
+            cv2.putText(frame, str (gender)+" "+str(age[1:-1]),(faces[i][0], faces[i][1] - 10),
+                        cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
+            genderAGE.append([gender,age[1:-1]])
         except :
             pass
+    return genderAGE
