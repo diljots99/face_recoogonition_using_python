@@ -9,9 +9,7 @@ vid = cv2.VideoCapture(0)
 
 
 
-def draw_rectangle(image, coords):
-    for (x, y, w, h) in coords:
-        cv2.rectangle(image, (x , y), (x + w , y + h), (0,0,255),2)
+
 while(True): 
       
     # Capture the video frame 
