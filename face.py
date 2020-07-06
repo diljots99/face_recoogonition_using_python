@@ -23,9 +23,10 @@ def live_Capture():
         faces_coord = detect_face(frame)
         draw_rectangle(frame, faces_coord)
         if len(faces_coord):
-            detect_gender(frame,faces_coord)
+           gender, age =  detect_gender(frame,faces_coord)
         print (faces_coord)
-
+        cv2.putText(frame, str (gender)+" "str(age),(faces_coord[i][0], faces_coord[i][1] - 10),
+                        cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
         #TODO predict if face exixts 
 
         if False:

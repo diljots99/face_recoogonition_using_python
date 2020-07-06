@@ -47,5 +47,6 @@ def detect_gender(frame,faces):
             agePreds=ageNet.forward()
             age=ageList[agePreds[0].argmax()]
             print(f'Age: {age[1:-1]} years')
+            return gender,age[1:-1]
         except :
             pass
