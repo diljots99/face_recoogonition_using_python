@@ -55,3 +55,35 @@ def detect_gender(frame,faces):
         except :
             pass
     return genderAGE
+
+
+def cut_faces(image, faces_coord):
+    faces = []
+    for (x, y, w, h) in faces_coord:
+        faces.append(image[y: y + h, x : x + w ])
+    return faces
+
+def normalize_intensity(images):
+    images_norm = []
+    for image in images:
+        images_norm.append(cv2.equalizeHist(image))
+    return images_norm
+
+def resize(images,size=(47,62)):
+    image_resize = []
+    
+    for image in images:
+        img_size = cv2.resize(image,size)
+        
+        image_resize.append(img_size)
+        
+    return image_resize
+
+
+def normalize_faces(frame, faces_coord):
+    #gray_frame = gray_scale(frame)
+    faces = cut_faces(frame, faces_coord)
+    faces = normalize_intensity(faces)
+    
+    faces = resize(faces)
+    return faces

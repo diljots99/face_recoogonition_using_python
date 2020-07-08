@@ -38,3 +38,20 @@ class VideoCamera(object):
         # encode OpenCV raw frame to jpg and displaying it
         ret, jpeg = cv2.imencode('.jpg', frame)
         return jpeg.tobytes()
+
+    def get_capture_frame(self):
+            ret, frame = self.video.read()
+            frame=cv2.resize(frame,None,fx=ds_factor,fy=ds_factor, interpolation=cv2.INTER_AREA)                    
+            
+            faces_coord = detect_face(frame)
+
+            if len(faces_coord):
+                # faces = normalize_faces(frame,faces_coord)
+                isFaceCaputred = True
+            else:
+                isFaceCaputred =False
+                
+            
+           
+            
+            return frame,isFaceCaputred
