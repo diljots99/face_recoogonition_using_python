@@ -59,12 +59,12 @@ def capture(camera,form=None):
 
         yield (b'--frame\r\n'
             b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
-
+   
     userData["samples"] = samples
     db.insert_user_data("peoples",userData)
    
     redirect(url_for("add_new_face"))
-
+    
 @app.route('/video_feed')
 def video_feed():
     return Response(gen(VideoCamera()),
@@ -104,9 +104,10 @@ def capture_face_data(form):
 @app.route("/start_training")
 def start_traning():
     train_model()
-    return Response("<h1>Hello</h1>")
+    return redirect(url_for("index"))
 
 if __name__ == '__main__':
-    # defining server ip address and port
+
+   # defining server ip address and port
 
     app.run(port='5000', debug=True)

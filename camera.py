@@ -29,19 +29,25 @@ class VideoCamera(object):
            
             basedir = os.getcwd().replace("\\","/") +"/models"
             if os.path.exists(basedir):
-                ID = predict(frame,faces_coord)
-                db = MyDatabase()
-                doc = db.get_user_data("peoples",ID)
+                try:
+                    ID = predict(frame,faces_coord)
+                    db = MyDatabase()
+                    doc = db.get_user_data("peoples",ID)
 
-                name = doc['fullName']
-
-                draw_rectangle(frame, faces_coord)
-                
-                cv2.putText(frame, name,(faces_coord[0][0], faces_coord[0][1] - 10),
-                        cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
+                    name = doc['fullName']
+                    age = doc['age']
+                    gender = doc['gender']
+                    draw_rectangle(frame, faces_coord)
+                    info = name + " "+ age +" "+gender
+                    cv2.putText(frame, info,(faces_coord[0][0], faces_coord[0][1] - 10),
+                            cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
+                except :
+                    print("Exception Occred in Prediction")
 
             else:
                 detect_gender(frame,faces_coord)
+                draw_rectangle(frame, faces_coord)
+
         # face_rects=face_cascade.detectMultiScale(gray,1.3,5)
 
         # for (x,y,w,h) in face_rects:
