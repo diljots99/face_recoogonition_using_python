@@ -24,10 +24,24 @@ class VideoCamera(object):
 
         faces_coord = detect_face(frame)
 
-        draw_rectangle(frame, faces_coord)
+        
         if len(faces_coord):
-            detect_gender(frame,faces_coord)
+           
+            basedir = os.getcwd().replace("\\","/") +"/models"
+            if os.path.exists(basedir):
+                ID = predict(frame,faces_coord)
+                db = MyDatabase()
+                doc = db.get_user_data("peoples",ID)
 
+                name = doc['fullName']
+
+                draw_rectangle(frame, faces_coord)
+                
+                cv2.putText(frame, name,(faces_coord[0][0], faces_coord[0][1] - 10),
+                        cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
+
+            else:
+                detect_gender(frame,faces_coord)
         # face_rects=face_cascade.detectMultiScale(gray,1.3,5)
 
         # for (x,y,w,h) in face_rects:
@@ -46,12 +60,12 @@ class VideoCamera(object):
             faces_coord = detect_face(frame)
 
             if len(faces_coord):
-                # faces = normalize_faces(frame,faces_coord)
-                isFaceCaputred = True
+                faces = normalize_faces(frame,faces_coord)
+                draw_rectangle(frame,faces_coord)
             else:
-                isFaceCaputred =False
+                faces = None
                 
             
            
             
-            return frame,isFaceCaputred
+            return frame,faces

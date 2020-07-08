@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC,LinearSVC
 from sklearn.model_selection import GridSearchCV,KFold
 import pickle
-
+from database import MyDatabase
 
 def detect_face(frame):
     detector = cv2.CascadeClassifier("xml/frontal_face.xml")
@@ -83,7 +83,114 @@ def resize(images,size=(47,62)):
 def normalize_faces(frame, faces_coord):
     #gray_frame = gray_scale(frame)
     faces = cut_faces(frame, faces_coord)
-    faces = normalize_intensity(faces)
+    # faces = normalize_intensity(faces)
     
     faces = resize(faces)
     return faces
+
+def collect_dataset():
+    images = []
+    labels = []
+    labels_dic = {}
+   
+    people = [person for person in os.listdir("images/")]
+   
+    for i, person in enumerate(people):
+        labels_dic[i] = person
+        for image in os.listdir("images/" + person):
+            if image.endswith('.jpg'):
+                images.append(cv2.imread("images/" + person + '/' + image, 0))
+                labels.append(i)
+    return (images, np.array(labels), labels_dic)
+
+
+def train_model():
+    images, labels, labels_dic = collect_dataset()
+    print(images)
+    print(labels)
+    print(labels_dic)
+    X_train=np.asarray(images)
+    train=X_train.reshape(len(X_train),-1)
+    
+    sc = StandardScaler()
+    X_train_sc = sc.fit_transform(train.astype(np.float64))
+    
+    pca1 = PCA(n_components=.97)
+    new_train=pca1.fit_transform(X_train_sc)
+    kf=KFold(n_splits=5,shuffle=True)
+    param_grid = {'C':[.0001,.001,.01,.1,1,10]}
+    gs_svc = GridSearchCV(SVC(kernel='linear',probability=True),param_grid=param_grid,cv=kf,scoring='accuracy')
+
+    gs_svc.fit(new_train,labels)
+    svc1=gs_svc.best_estimator_
+
+    basedir = os.getcwd().replace("\\","/") +"/models"
+    print(basedir)
+    
+    if not os.path.exists(basedir):
+        os.makedirs(basedir)
+
+    filename = '/svc_linear_face.pkl'
+    f=open(basedir+filename, 'wb')
+    pickle.dump(svc1,f)
+    f.close()
+
+    filename = '/pca.pkl'
+    f=open(basedir+filename, 'wb')
+    pickle.dump(pca1,f)
+    f.close()
+
+    filename = '/standardscalar.pkl'
+    f=open(basedir+filename, 'wb')
+    pickle.dump(sc,f)
+    f.close()
+    print('model has been trained')
+    return True
+
+
+def predict(frame,faces_coord):
+    global label
+    images, labels, labels_dic = collect_dataset()
+
+    basedir = os.getcwd().replace("\\","/") +"/models"
+    print(basedir)
+
+    filename = '/svc_linear_face.pkl'
+    svc1 = pickle.load(open(basedir+filename, 'rb'))
+
+    filename = '/pca.pkl'
+    pca1 = pickle.load(open(basedir+filename, 'rb'))
+
+    filename = '/standardscalar.pkl'
+    sc = pickle.load(open(basedir+filename, 'rb'))
+
+    if len(faces_coord):
+        gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        faces = normalize_faces(gray, faces_coord)
+         
+        for i, face in enumerate(faces): # for each detected face
+            t=face.reshape(1,-1)
+            t=sc.transform(t.astype(np.float64))
+            test = pca1.transform(t)    
+        
+            prob=svc1.predict_proba(test)
+            confidence = svc1.decision_function(test)
+            print (confidence)
+            print (prob)
+        
+        
+        
+            pred = svc1.predict(test)
+            print (pred,pred[0])
+        
+            name=pred
+            print (name)
+            ID = int(labels_dic[pred[0]])
+            
+        
+        draw_rectangle(frame, faces_coord) # rectangle around face
+        
+        return ID
+    else:
+        return None
+        
