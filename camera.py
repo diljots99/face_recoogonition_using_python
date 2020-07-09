@@ -4,6 +4,7 @@ import cv2
 face_cascade=cv2.CascadeClassifier("xml/frontal_face.xml")
 ds_factor=1.0
 from Face_Functions import *
+from datetime import date
 
 class VideoCamera(object):
     def __init__(self):
@@ -35,14 +36,20 @@ class VideoCamera(object):
                     doc = db.get_user_data("peoples",ID)
 
                     name = doc['fullName']
-                    age = doc['age']
+                    dob = doc['dob']
+
+                    age = calculate_age(dob)
+
                     gender = doc['gender']
-                    draw_rectangle(frame, faces_coord)
-                    info = name + " "+ age +" "+gender
+                    
+                    info = name + " "+ str(age) +" "+gender
                     cv2.putText(frame, info,(faces_coord[0][0], faces_coord[0][1] - 10),
                             cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
+                    draw_rectangle(frame, faces_coord)
                 except :
                     print("Exception Occred in Prediction")
+                    # detect_gender(frame,faces_coord)
+                    # draw_rectangle(frame, faces_coord)
 
             else:
                 detect_gender(frame,faces_coord)

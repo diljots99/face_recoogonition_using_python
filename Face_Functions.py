@@ -8,6 +8,7 @@ from sklearn.svm import SVC,LinearSVC
 from sklearn.model_selection import GridSearchCV,KFold
 import pickle
 from database import MyDatabase
+from datetime import date,datetime
 
 def detect_face(frame):
     detector = cv2.CascadeClassifier("xml/frontal_face.xml")
@@ -194,3 +195,15 @@ def predict(frame,faces_coord):
     else:
         return None
         
+
+def calculate_age(birthdate):
+    birthDateObj  = datetime.strptime(birthdate,"%Y-%m-%d").date()
+    today = date.today()
+    print(birthdate)
+    print(birthDateObj)
+    # age = today.year - birthDateObj.year - ((today.month, today.day) <  (birthDateObj.month, birthDateObj.day)) 
+    days_in_YEAR = 365.2425
+    age = int((today - birthDateObj).days/days_in_YEAR)
+
+    print(age)
+    return age

@@ -1,17 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <title>Add New Face</title>
 </head>
-<body>
-    <h1>Capturing Face Data</h1>
-    <h3>After capturing 100 sampkes of your Face it will rediect to intial state</h3>
-    <img id="bg" src="{{ url_for('capture_feed', form=form) }}">
 
-    <h3>if it does rediect After capture finished click <a href="/">here</a></h3>
-    <h3> <a href="/start_training">Train And Go Ahead</a></h3>
+<body>
+
+    <div class="header-container">
+        <div class="header">
+            <div class="header-left">
+                <a href="/">Face Recogonition Demonstration</a>
+
+                <h1></h1>
+            </div>
+            <div class="header-right">
+                <a href="/add_new_face">Add New Face</a>
+                <a href="/start_training">start traning</a>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="captureContainer">
+        <h1>Capturing Face Data</h1>
+        <h3>After capturing 100 sampkes of your Face it will rediect to intial state</h3>
+        <img id="bg" src="{{ url_for('capture_feed', form=form) }}">
+
+        <h3>if it does rediect After capture finished click <a href="/">here</a></h3>
+        <h3> <a href="/start_training">Train And Go Ahead</a></h3>
+    </div>
 
 </body>
+
 </html>

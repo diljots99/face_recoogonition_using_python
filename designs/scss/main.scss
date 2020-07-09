@@ -1,0 +1,131 @@
+@import "./variables";
+$headerHeight: 100px;
+
+@mixin flexCenter($direction: row) {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: $direction;
+}
+
+@mixin mobile {
+    @media (max-width: $mobileWidth) {
+        @content;
+    }
+}
+
+body {
+    // background: $Backgound;
+    color: $text-color;
+    width: 100%;
+    background: #332f2f ;
+    font-family: "Agency FB";
+    align-self: center;
+    justify-content: center;
+}
+
+header {
+    background-color: black;
+}
+
+.header {
+    @include flexCenter(row);
+    position: fixed;
+    z-index: 1;
+
+    background-color: $headerBackground;
+    width: 100%;
+    height: $headerHeight;
+    top: 0rem;
+    box-shadow: $headerShadow;
+
+    padding: 30px 30px;
+    // box-shadow: $shadow;
+
+    margin: 0 0;
+
+    @include mobile {
+        display: none;
+    }
+
+    #{&}-left {
+        align-self: center;
+        
+        a {
+            font-size: 3rem;
+            color: $text-color;
+            text-decoration: none;
+            &:hover {
+                color: $accent;
+            }
+        }
+    }
+
+
+    
+}
+
+.header-right {
+    margin-left: auto;
+    align-self: center;
+
+    -webkit-box-orient: horizontal;
+    align-self: center;
+
+    a {
+        align-self: center;
+        max-width: 150px;
+        margin-left: 10px;
+        font-family: "showcard gothic";
+        background: $accent;
+        color: $text-color;
+        text-align: center;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 1.5rem;
+        line-height: 25px;
+        border-radius: 5px;
+
+        &:hover {
+            box-shadow: $shadow;
+        }
+    }
+}
+
+
+
+.videoContainer {
+    @include flexCenter(row);
+    margin-top: 300px;
+    align-self: center;
+    justify-content: center;
+}
+
+.formContainer {
+    @include flexCenter(column);
+    margin-top: 200px;
+    align-self: center;
+    -webkit-box-orient: vertical;
+    justify-content: center;
+    orientation: vertical;
+    width: 100%;
+
+}
+
+
+.captureContainer {
+    @include flexCenter(column);
+    margin-top: 200px;
+    align-self: center;
+    -webkit-box-orient: vertical;
+    justify-content: center;
+    orientation: vertical;
+    width: 100%;
+
+    img{
+        width: 40%;
+        height: 30%;
+    }
+
+}
+
+

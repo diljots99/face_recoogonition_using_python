@@ -5,7 +5,7 @@ from database import MyDatabase
 from Face_Functions import *
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
+app.config["SERVER_NAME"] = "127.0.0.1:5000"
 flag_start_capturing = False
 
 db = MyDatabase()
@@ -62,8 +62,8 @@ def capture(camera,form=None):
    
     userData["samples"] = samples
     db.insert_user_data("peoples",userData)
-   
-    redirect(url_for("add_new_face"))
+    with app.app_context():
+        redirect(url_for("index"))
     
 @app.route('/video_feed')
 def video_feed():
@@ -74,8 +74,7 @@ def video_feed():
 def capture_feed(form):
     feed = capture(VideoCamera(),form)
     if feed == None:
-        print("HAHAHA")
-        return redirect(url_for("index"))
+       pass
     res = Response(feed, mimetype='multipart/x-mixed-replace; boundary=frame')
 
     return res
@@ -110,4 +109,4 @@ if __name__ == '__main__':
 
    # defining server ip address and port
 
-    app.run(port='5000', debug=True)
+   app.run(host = '127.0.0.1',port='5000', debug=True)

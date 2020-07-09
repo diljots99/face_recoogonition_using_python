@@ -1,28 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <title>Add New Face</title>
 </head>
+
 <body>
-    <h1>Add New Face</h1>
-    
-    
-    <form method="POST">
-        <label for="fullName">Full Name</label>
-        <input type="text" name="fullName" id="fullName">
 
-        <label for="age">Age</label>
-        <input type="text" name="age" id="age">
+    <div class="header-container">
+        <div class="header">
+            <div class="header-left">
+                <a href="/">Face Recogonition Demonstration</a>
 
-        <label for="gender">Gender</label>
-        <select name="gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-        </select>
+                <h1></h1>
+            </div>
+            <div class="header-right">
+                <a href="/add_new_face">Add New Face</a>
+                <a href="/start_training">start traning</a>
 
-        <input type="submit" value="Start Capturing">
-    </form>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="formContainer">
+        <h1>Add New Face</h1>
+
+
+        <form method="POST">
+            <label for="fullName">Full Name</label>
+            <input type="text" name="fullName" id="fullName">
+
+            <!-- <label for="age">Age</label>
+        <input type="text" name="age" id="age"> -->
+
+            <label for="dob">Date Of Birth</label>
+            <input type="date" name="dob" id="dob">
+
+
+            <label for="gender">Gender</label>
+            <select name="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <input type="submit" value="Start Capturing">
+        </form>
+    </div>
 </body>
