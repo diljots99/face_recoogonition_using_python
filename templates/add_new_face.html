@@ -1,58 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-    <title>Add New Face</title>
-</head>
-
-<body>
-
-    <div class="header-container">
-        <div class="header">
-            <div class="header-left">
-                <a href="/">Face Recogonition Demonstration</a>
-
-                <h1></h1>
-            </div>
-            <div class="header-right">
-                <a href="/add_new_face">Add New Face</a>
-                <a href="/start_training">start traning</a>
-
-            </div>
-
-        </div>
-    </div>
+{% block content %}
 
     <div class="formContainer">
-        <h1>Add New Face</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category,message in messages%}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith  %}
+        <form method="POST" action="">
+
+            {{ form.hidden_tag()  }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4"> Add New Face</legend>
+
+                <div class="form-group">
+                    {{ form.fullName.label(class="form-control-label") }}
+                    {% if form.fullName.errors %}
+                    {{ form.fullName(class="form-control form-control-lg is-invalid") }}
+
+                    <div class="invalid-feedback">
+                        {% for error in form.fullName.errors %}
+                        <span>{{ error }} </span>
+
+                        {% endfor  %}
+
+                        </div>
+                    {% else %}
+                        {{ form.fullName(class="form-control form-control-lg") }}
+                        {% endif %}
+                </div>
+
+                    <div class="form-group">
+                        {{ form.dob.label(class="form-control-label") }}
+                        {% if form.dob.errors %}
+                        {{ form.dob(class="form-control form-control-lg is-invalid") }}
+
+                        <div class="invalid-feedback">
+                            {% for error in form.dob.errors %}
+                            <span>{{ error }} </span>
+
+                            {% endfor  %}
+
+                             </div>
+                          {% else %}
+                            {{ form.dob(class="form-control form-control-lg") }}
+                            {% endif %}
+
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.email.label(class="form-control-label") }}
+                            {% if form.email.errors %}
+                            {{ form.email(class="form-control form-control-lg is-invalid") }}
+        
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                <span>{{ error }} </span>
+        
+                                {% endfor  %}
+        
+                                </div>
+                            {% else %}
+                                {{ form.email(class="form-control form-control-lg") }}
+                                {% endif %}
+
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label(class="form-control-label") }}
+                            {% if form.password.errors %}
+                            {{ form.password(class="form-control form-control-lg is-invalid") }}
+        
+                            <div class="invalid-feedback">
+                                {% for error in form.password.errors %}
+                                <span>{{ error }} </span>
+        
+                                {% endfor  %}
+        
+                                </div>
+                            {% else %}
+                                {{ form.password(class="form-control form-control-lg") }}
+                                {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.confirm_password.label(class="form-control-label") }}
+                            {% if form.confirm_password.errors %}
+                            {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+        
+                            <div class="invalid-feedback">
+                                {% for error in form.confirm_password.errors %}
+                                <span>{{ error }} </span>
+        
+                                {% endfor  %}
+        
+                                </div>
+                            {% else %}
+                                {{ form.confirm_password(class="form-control form-control-lg") }}
+                                {% endif %}
+
+                        </div>
 
 
-        <form method="POST">
-            <label for="fullName">Full Name</label>
-            <input type="text" name="fullName" id="fullName">
+            </fieldset>
 
-            <!-- <label for="age">Age</label>
-        <input type="text" name="age" id="age"> -->
-
-            <label for="dob">Date Of Birth</label>
-            <input type="date" name="dob" id="dob">
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
 
 
-            <label for="gender">Gender</label>
-            <select name="gender">
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-
-            <input type="submit" value="Start Capturing">
+            </div>
         </form>
     </div>
-</body>
+
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Some Random Infor <a class="ml-2" href="">Hello</a>
+        </small>
+    </div>
+
+    {% endblock content %}

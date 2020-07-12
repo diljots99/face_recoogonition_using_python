@@ -6,6 +6,8 @@ ds_factor=1.0
 from Face_Functions import *
 from datetime import date
 
+
+db = MyDatabase()
 class VideoCamera(object):
     def __init__(self):
        #capturing video
@@ -25,14 +27,13 @@ class VideoCamera(object):
 
         faces_coord = detect_face(frame)
 
-        
         if len(faces_coord):
            
             basedir = os.getcwd().replace("\\","/") +"/models"
             if os.path.exists(basedir):
                 try:
                     ID = predict(frame,faces_coord)
-                    db = MyDatabase()
+              
                     doc = db.get_user_data("peoples",ID)
 
                     name = doc['fullName']

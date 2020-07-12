@@ -1,34 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-    <title>Add New Face</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-
-    <div class="header-container">
-        <div class="header">
-            <div class="header-left">
-                <a href="/">Face Recogonition Demonstration</a>
-
-                <h1></h1>
-            </div>
-            <div class="header-right">
-                <a href="/add_new_face">Add New Face</a>
-                <a href="/start_training">start traning</a>
-
-            </div>
-
-        </div>
-    </div>
+{% block content %}
 
     <div class="captureContainer">
         <h1>Capturing Face Data</h1>
@@ -41,4 +14,4 @@
 
 </body>
 
-</html>
+{% endblock content %}
