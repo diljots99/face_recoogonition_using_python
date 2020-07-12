@@ -7,11 +7,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC,LinearSVC
 from sklearn.model_selection import GridSearchCV,KFold
 import pickle
-from database import MyDatabase
+from FaceRecApp.database import MyDatabase
 from datetime import date,datetime
 
 def detect_face(frame):
-    detector = cv2.CascadeClassifier("xml/frontal_face.xml")
+    detector = cv2.CascadeClassifier("FaceRecApp/xml/frontal_face.xml")
     faces = detector.detectMultiScale(frame,1.2)
     return faces
 
@@ -21,14 +21,14 @@ def draw_rectangle(image, coords):
 
 def detect_gender(frame,faces):
 
-    genderProto="detectionModel/gender_deploy.prototxt"
-    genderModel="detectionModel/gender_net.caffemodel"
+    genderProto="FaceRecApp/detectionModel/gender_deploy.prototxt"
+    genderModel="FaceRecApp/detectionModel/gender_net.caffemodel"
     genderList=['Male','Female']
     MODEL_MEAN_VALUES=(78.4263377603, 87.7689143744, 114.895847746)
     genderNet=cv2.dnn.readNet(genderModel,genderProto)
     
-    ageProto="detectionModel/age_deploy.prototxt"
-    ageModel="detectionModel/age_net.caffemodel"
+    ageProto="FaceRecApp/detectionModel/age_deploy.prototxt"
+    ageModel="FaceRecApp/detectionModel/age_net.caffemodel"
     ageNet=cv2.dnn.readNet(ageModel,ageProto)
     ageList=['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
     padding=20

@@ -3,7 +3,7 @@ import cv2
 # defining face detector
 face_cascade=cv2.CascadeClassifier("xml/frontal_face.xml")
 ds_factor=1.0
-from Face_Functions import *
+from FaceRecApp.Face_Functions import *
 from datetime import date
 
 

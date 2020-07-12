@@ -1,32 +1,29 @@
+import cv2,os,json,pprint
+
 from flask import Flask, render_template, Response, request, flash, redirect, url_for
-from camera import VideoCamera
-import cv2
-import os
-import json
-import pprint
-from database import MyDatabase
-from Face_Functions import *
-from forms import AddNewFace
+from FaceRecApp import app
+
+from  flask_sqlalchemy import  SQLAlchemy
+
+from FaceRecApp.camera import VideoCamera
+
+from FaceRecApp.Face_Functions import *
+from FaceRecApp.forms import AddNewFace
+from FaceRecApp.models import  Persons
 
 
-app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-app.config["SERVER_NAME"] = "127.0.0.1:5000"
+
 flag_start_capturing = False
 
-db = MyDatabase()
-# db.get_new_insert_id("peoples")
 
 
-@app.route('/testme')
-def testme():
-    form = AddNewFace()
-    return render_template('test.html', title="Add New Face", form=form)
+
+# db = MyDatabase()
+
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-
     return render_template('index.html')
 
 
@@ -114,9 +111,6 @@ def add_new_face_data():
 @app.route('/capture_face_data/<form>')
 def capture_face_data(form):
     print('heelo   '   ,form)
-    # print(form.get('fullName'))
-    # print(form.get('age'))
-    # print(form.get('gender'))
     return render_template('Capture_Face_Data.html',form=form)
 
 
@@ -126,9 +120,3 @@ def capture_face_data(form):
 def start_traning():
     train_model()
     return redirect(url_for("index"))
-
-if __name__ == '__main__':
-
-   # defining server ip address and port
-
-   app.run(host = '127.0.0.1',port='5000', debug=True)

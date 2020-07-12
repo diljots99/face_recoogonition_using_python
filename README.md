@@ -11,6 +11,7 @@ Python
 sklearn
 pickle
 pip  install flask-wtf  for wtForms
+pip install flask-sqlalchemy
 
 Getting Started
 
@@ -22,3 +23,7 @@ set FLASK_APP=app.py
 
 running flask app
 flask run
+
+
+database
+
