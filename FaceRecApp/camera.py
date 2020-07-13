@@ -1,13 +1,13 @@
-# import the necessary packages
 import cv2
 # defining face detector
 face_cascade=cv2.CascadeClassifier("xml/frontal_face.xml")
 ds_factor=1.0
 from FaceRecApp.Face_Functions import *
 from datetime import date
+from FaceRecApp.models import  Persons
+from FaceRecApp import db
 
 
-db = MyDatabase()
 class VideoCamera(object):
     def __init__(self):
        #capturing video
@@ -34,16 +34,20 @@ class VideoCamera(object):
                 try:
                     ID = predict(frame,faces_coord)
               
-                    doc = db.get_user_data("peoples",ID)
+                    person = Persons.query.get(ID)
+                    print(person)
+                    print(person.fullname)
+                    print(person.dob)
+                    print(type(person.dob))
 
-                    name = doc['fullName']
-                    dob = doc['dob']
+                    name = person.fullname
+                    dob = person.dob
 
                     age = calculate_age(dob)
 
-                    gender = doc['gender']
+                    gender = person.gender
                     
-                    info = name + " "+ str(age) +" "+gender
+                    info = str(name) + " "+ str(age) +" "+str(gender)
                     cv2.putText(frame, info,(faces_coord[0][0], faces_coord[0][1] - 10),
                             cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
                     draw_rectangle(frame, faces_coord)

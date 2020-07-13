@@ -1,7 +1,7 @@
 import cv2,os,json,pprint
 
 from flask import Flask, render_template, Response, request, flash, redirect, url_for
-from FaceRecApp import app
+from FaceRecApp import app,db,bcrypt
 
 from  flask_sqlalchemy import  SQLAlchemy
 
@@ -11,14 +11,10 @@ from FaceRecApp.Face_Functions import *
 from FaceRecApp.forms import AddNewFace
 from FaceRecApp.models import  Persons
 
-
+from FaceRecApp.utlis import *
 
 flag_start_capturing = False
 
-
-
-
-# db = MyDatabase()
 
 
 
@@ -35,17 +31,17 @@ def gen(camera):
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 
-def capture(camera, form=None):
-    ID = db.get_new_insert_id("peoples")
-    sample_dir_path = "/images/"+str(ID)+"/"
-    print(form)
-    print(type(form))
-    userData = eval(str(form))
-    userData["_id"] = ID
-    userData['sample_dir_path'] = sample_dir_path
-    print(userData)
+def capture(camera, username=None):
+    print(username)
+    person = Persons.query.filter_by(username=username).first()
+    
+    ID = person.id
 
-    samples = []
+    sample_dir_path = person.sample_dir_path
+
+    print(person)
+
+    
     no_of_samples = 0
 
     while no_of_samples < 20:
@@ -58,7 +54,7 @@ def capture(camera, form=None):
 
             path = basedir + str(no_of_samples)+'.jpg'
 
-            samples.append(sample_dir_path+str(no_of_samples)+'.jpg')
+            
             print(path)
 
             cv2.imwrite(path, faces[0])
@@ -71,8 +67,8 @@ def capture(camera, form=None):
         yield (b'--frame\r\n'
             b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
-    userData["samples"] = samples
-    db.insert_user_data("peoples", userData)
+    person.noOfSamples = no_of_samples
+    db.session.commit()
     with app.app_context():
         redirect(url_for("index"))
 
@@ -83,13 +79,14 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-@app.route('/capture_feed/<form>')
-def capture_feed(form):
-    feed = capture(VideoCamera(), form)
+@app.route('/capture_feed/<username>')
+def capture_feed(username):
+    print("capture_feed",username)
+    feed = capture(VideoCamera(), username)
+    print(feed)
     if feed == None:
        pass
     res = Response(feed, mimetype='multipart/x-mixed-replace; boundary=frame')
-
     return res
 
 
@@ -98,20 +95,41 @@ def add_new_face_data():
     print(request.method)
   
     form = AddNewFace()
+
     if form.validate_on_submit():
-        Form = dict(request.form)
-        data = json.dumps(Form)
-        flash(f'Account Data Gathered','success')
-        return redirect(url_for("capture_face_data",form=data))
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+
+        ID =getMaxID()
+
+        sample_dir_path = "/images/"+str(ID)+"/"
+
+        print(form.gender.data)
+         
+        person = Persons(
+            fullname= form.fullName.data,
+            username= form.username.data,
+            email=form.email.data,
+            dob=form.dob.data,
+            gender=form.gender.data,
+            password=hashed_password,
+            id=ID,
+            sample_dir_path=sample_dir_path)
+
+        
+        db.session.add(person)
+        db.session.commit()
+        flash(f'Face data has been added,','success')
+        return redirect(url_for("capture_face_data",username=form.username.data))
+
     return render_template('add_new_face.html',title="Add New Face", form=form)
 
     
 
 
-@app.route('/capture_face_data/<form>')
-def capture_face_data(form):
-    print('heelo   '   ,form)
-    return render_template('Capture_Face_Data.html',form=form)
+@app.route('/capture_face_data/<username>')
+def capture_face_data(username):
+    print('heelo   '   ,username)
+    return render_template('Capture_Face_Data.html',username=username)
 
 
 

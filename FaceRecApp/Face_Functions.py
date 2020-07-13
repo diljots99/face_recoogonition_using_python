@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC,LinearSVC
 from sklearn.model_selection import GridSearchCV,KFold
 import pickle
-from FaceRecApp.database import MyDatabase
+# from FaceRecApp.database import MyDatabase
 from datetime import date,datetime
 
 def detect_face(frame):
@@ -197,7 +197,7 @@ def predict(frame,faces_coord):
         
 
 def calculate_age(birthdate):
-    birthDateObj  = datetime.strptime(birthdate,"%Y-%m-%d").date()
+    birthDateObj  = birthdate
     today = date.today()
     print(birthdate)
     print(birthDateObj)

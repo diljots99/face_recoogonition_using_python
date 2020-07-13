@@ -12,6 +12,8 @@ sklearn
 pickle
 pip  install flask-wtf  for wtForms
 pip install flask-sqlalchemy
+pip install flask-bcrypt
+
 
 Getting Started
 
