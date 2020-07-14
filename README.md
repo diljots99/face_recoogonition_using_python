@@ -19,7 +19,7 @@ Mannual Install Commands
     pip install flask-bcrypt
     pip install SQLAlchemy-Utils
 
-Automatic insatll Command
+Automatic install Command
     
     pip3 install -r requirements.txt
 
