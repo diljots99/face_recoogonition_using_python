@@ -9,6 +9,7 @@ Python
 
 python libaries 
 Mannual Install Commands
+
     pip install Flask
     pip install opencv-python
     pip install scikit-learn
