@@ -70,7 +70,7 @@
                     <div class="form-group">
                         {{ form.dob.label(class="form-control-label") }}
                         {% if form.dob.errors %}
-                        {{ form.dob(class="form-control form-control-lg is-invalid") }}
+                        {{ form.dob(class="datepicker form-control form-control-lg is-invalid") }}
 
                         <div class="invalid-feedback">
                             {% for error in form.dob.errors %}

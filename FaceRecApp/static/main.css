@@ -102,7 +102,6 @@ header {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  margin-top: 300px;
   -ms-flex-item-align: center;
       align-self: center;
   -webkit-box-pack: center;
@@ -119,7 +118,6 @@ header {
           justify-content: flex-start;
   -ms-flex-direction: column;
       flex-direction: column;
-  margin-top: 200px;
   -ms-flex-item-align: center;
       align-self: center;
   -webkit-box-orient: vertical;
@@ -127,7 +125,6 @@ header {
       -ms-flex-pack: center;
           justify-content: center;
   orientation: vertical;
-  width: 100%;
 }
 
 .captureContainer {
@@ -139,7 +136,6 @@ header {
           justify-content: flex-start;
   -ms-flex-direction: column;
       flex-direction: column;
-  margin-top: 200px;
   -ms-flex-item-align: center;
       align-self: center;
   -webkit-box-orient: vertical;
@@ -147,11 +143,16 @@ header {
       -ms-flex-pack: center;
           justify-content: center;
   orientation: vertical;
-  width: 100%;
 }
 
 .captureContainer img {
   width: 40%;
   height: 30%;
 }
+
+.container {
+  margin-top: 200px;
+}
+
+
 /*# sourceMappingURL=main.css.map */

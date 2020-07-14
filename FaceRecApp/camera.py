@@ -33,28 +33,33 @@ class VideoCamera(object):
             if os.path.exists(basedir):
                 try:
                     ID = predict(frame,faces_coord)
-              
-                    person = Persons.query.get(ID)
-                    print(person)
-                    print(person.fullname)
-                    print(person.dob)
-                    print(type(person.dob))
-
-                    name = person.fullname
-                    dob = person.dob
-
-                    age = calculate_age(dob)
-
-                    gender = person.gender
-                    
-                    info = str(name) + " "+ str(age) +" "+str(gender)
-                    cv2.putText(frame, info,(faces_coord[0][0], faces_coord[0][1] - 10),
-                            cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
-                    draw_rectangle(frame, faces_coord)
                 except :
                     print("Exception Occred in Prediction")
-                    # detect_gender(frame,faces_coord)
-                    # draw_rectangle(frame, faces_coord)
+
+                try:    
+                    person = Persons.query.get(ID)
+                    name = person.fullname
+                    dob = person.dob
+                    gender = person.gender
+                    
+                except :
+                    print("Unable To fetch Predicted id from db")
+                    name,age,gender = ""
+                   
+                try:
+                    age = calculate_age(dob)
+                except :
+                    print("exception occured in calculating age")
+                    age = ""
+
+                   
+                info = str(name) + " "+ str(age) +" "+str(gender)
+                cv2.putText(frame, info,(faces_coord[0][0], faces_coord[0][1] - 10),
+                        cv2.FONT_HERSHEY_PLAIN, 2, (66, 53, 243), 2)
+                draw_rectangle(frame, faces_coord)
+               
+                # detect_gender(frame,faces_coord)
+                # draw_rectangle(frame, faces_coord)
 
             else:
                 detect_gender(frame,faces_coord)

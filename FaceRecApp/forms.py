@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import  StringField,PasswordField,SubmitField,DateField,SelectField
+from wtforms import  StringField,PasswordField,SubmitField,SelectField
+from wtforms.fields.html5 import  DateField
 from wtforms.validators import  DataRequired,Length,Email,EqualTo,ValidationError
 import email_validator
 from FaceRecApp.models import Persons
@@ -11,7 +12,7 @@ class AddNewFace(FlaskForm):
     username = StringField("User Name",
                 validators=[DataRequired(),Length(min=1,max=50)])
 
-    dob = DateField("Date Of Birth",format='%d-%m-%Y',description="dd-mm-YYYY")
+    dob = DateField("Date Of Birth",format='%Y-%m-%d',description="dd-mm-YYYY")
                 
     email = StringField('Email',validators=[DataRequired(),Email()])
 

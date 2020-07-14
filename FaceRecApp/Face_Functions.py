@@ -33,13 +33,15 @@ def detect_gender(frame,faces):
     ageList=['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
     padding=20
     genderAGE = []
+    gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     for i, faceBox in enumerate(faces):
-        face=frame[max(0,faceBox[1]-padding):
-                   min(faceBox[3]+padding,frame.shape[0]-1),max(0,faceBox[0]-padding)
-                   :min(faceBox[2]+padding, frame.shape[1]-1)]
+        face=frame[max(0,faceBox[1]-padding):min(faceBox[3]+padding,frame.shape[0]-1),
+                    max(0,faceBox[0]-padding):min(faceBox[2]+padding, frame.shape[1]-1)]
+        
         try:
            
             blob=cv2.dnn.blobFromImage(face, 1.0, (227,227), MODEL_MEAN_VALUES, swapRB=False)
+           
             genderNet.setInput(blob)
             genderPreds=genderNet.forward()
             gender=genderList[genderPreds[0].argmax()]

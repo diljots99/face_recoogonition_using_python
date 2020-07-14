@@ -95,31 +95,31 @@ header {
 
 .videoContainer {
     @include flexCenter(row);
-    margin-top: 300px;
+    
     align-self: center;
     justify-content: center;
 }
 
 .formContainer {
     @include flexCenter(column);
-    margin-top: 200px;
+  
     align-self: center;
     -webkit-box-orient: vertical;
     justify-content: center;
     orientation: vertical;
-    width: 100%;
+
 
 }
 
 
 .captureContainer {
     @include flexCenter(column);
-    margin-top: 200px;
+  
     align-self: center;
     -webkit-box-orient: vertical;
     justify-content: center;
     orientation: vertical;
-    width: 100%;
+
 
     img{
         width: 40%;
@@ -129,3 +129,7 @@ header {
 }
 
 
+.container{
+    margin-top:200px;
+
+}

@@ -1,6 +1,6 @@
 import cv2,os,json,pprint
 
-from flask import Flask, render_template, Response, request, flash, redirect, url_for
+from flask import Flask, render_template, Response, request, flash, redirect, url_for,stream_with_context
 from FaceRecApp import app,db,bcrypt
 
 from  flask_sqlalchemy import  SQLAlchemy
@@ -33,45 +33,40 @@ def gen(camera):
 
 def capture(camera, username=None):
     print(username)
-    person = Persons.query.filter_by(username=username).first()
-    
-    ID = person.id
+    try:
+        person = Persons.query.filter_by(username=username).first()
+        ID = person.id
+        sample_dir_path = person.sample_dir_path
+        print(person)
+        no_of_samples = 0
 
-    sample_dir_path = person.sample_dir_path
+        while no_of_samples < 20:
 
-    print(person)
+            frame, faces = camera.get_capture_frame()
+            if faces is not None:
+                basedir = os.getcwd().replace("\\", "/") + sample_dir_path
+                if not os.path.exists(basedir):
+                    os.makedirs(basedir)
 
-    
-    no_of_samples = 0
+                path = basedir + str(no_of_samples)+'.jpg'
 
-    while no_of_samples < 20:
+                print(path)
+                cv2.imwrite(path, faces[0])
+                no_of_samples += 1
+            cv2.putText(frame, "Samples Captured={}".format(no_of_samples), (5,
+                        frame.shape[0] - 5), cv2.FONT_HERSHEY_PLAIN, 1.3, (66, 53, 243), 2, cv2.LINE_AA)
+            ret, jpeg = cv2.imencode('.jpg', frame)
 
-        frame, faces = camera.get_capture_frame()
-        if faces is not None:
-            basedir = os.getcwd().replace("\\", "/") + sample_dir_path
-            if not os.path.exists(basedir):
-                os.makedirs(basedir)
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
-            path = basedir + str(no_of_samples)+'.jpg'
-
-            
-            print(path)
-
-            cv2.imwrite(path, faces[0])
-            no_of_samples += 1
-
-        cv2.putText(frame, "Samples Captured={}".format(no_of_samples), (5,
-                    frame.shape[0] - 5), cv2.FONT_HERSHEY_PLAIN, 1.3, (66, 53, 243), 2, cv2.LINE_AA)
-        ret, jpeg = cv2.imencode('.jpg', frame)
-
-        yield (b'--frame\r\n'
-            b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
-
-    person.noOfSamples = no_of_samples
-    db.session.commit()
-    with app.app_context():
-        redirect(url_for("index"))
-
+        person.noOfSamples = no_of_samples
+        db.session.commit()
+        
+        flash("Face Capture Succefully")
+        redirect(url_for('index'))
+    except :
+        return None
 
 @app.route('/video_feed')
 def video_feed():
@@ -82,10 +77,9 @@ def video_feed():
 @app.route('/capture_feed/<username>')
 def capture_feed(username):
     print("capture_feed",username)
-    feed = capture(VideoCamera(), username)
-    print(feed)
-    if feed == None:
-       pass
+   
+    feed = stream_with_context(capture(VideoCamera(), username))
+    print("feed")
     res = Response(feed, mimetype='multipart/x-mixed-replace; boundary=frame')
     return res
 
@@ -136,5 +130,26 @@ def capture_face_data(username):
 
 @app.route("/start_training")
 def start_traning():
-    train_model()
-    return redirect(url_for("index"))
+    path = str(os.path.realpath(__file__)).split("\\")
+    basePath= "/".join(path[:-2]) +"/images"
+    print(basePath)
+    print(os.path.exists(basePath))
+    print(os.path.exists(basePath+"/hello"))
+
+    if os.path.exists(basePath):
+        numberOfClasses =  os.listdir(basePath)
+        if len(numberOfClasses) < 2:
+            flash("Add at least data of two faces Before starting Training","danger")
+            return redirect(url_for("index"))
+        else:
+            status = train_model()
+            if status:
+                flash("Model Trained Succesfully","success")
+
+            return redirect(url_for("index"))
+    else:
+        #TODO print Message add at least to faces
+        print("print Message add at least to faces")
+        flash("Add at least data of two faces Before starting Training","danger")
+    
+        return redirect(url_for("index"))
