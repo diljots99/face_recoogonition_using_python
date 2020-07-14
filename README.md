@@ -11,7 +11,6 @@ python libaries
 Mannual Install Commands
     pip install Flask
     pip install opencv-python
-
     pip install scikit-learn
     pip install numpy
     pip install flask-wtf  for wtForms
@@ -20,6 +19,7 @@ Mannual Install Commands
     pip install SQLAlchemy-Utils
 
 Automatic insatll Command
+    
     pip3 install -r requirements.txt
 
 
